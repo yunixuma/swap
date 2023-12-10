@@ -1,5 +1,8 @@
 # include <stdio.h>
 # include <stdlib.h>
+# include <time.h>
+
+#define N_CYCLES	CLOCKS_PER_SEC
 
 void	swap_tmp(int *a, int *b)
 {
@@ -24,6 +27,18 @@ void	swap_dif(int *a, int *b)
 	*a = *b - *a;
 }
 
+void	test(int *a, int *b, void (*f)(int *, int *))
+{
+	clock_t	clock_begin;
+	clock_t	clock_end;
+
+	clock_begin = clock();
+	for (int i = 0; i < N_CYCLES; i++)
+		f(a, b);
+	clock_end = clock();
+	printf("[%p]\t%ld clocks\n", f, clock_end - clock_begin);
+}
+
 int	main(int argc, char *argv[])
 {
 	int	a;
@@ -36,12 +51,8 @@ int	main(int argc, char *argv[])
 		a = atoi(argv[1]);
 		b = atoi(argv[2]);
 	}
-	printf("a = %d, b = %d\n", a, b);
-	swap_tmp(&a, &b);
-	printf("a = %d, b = %d\n", a, b);
-	swap_xor(&a, &b);
-	printf("a = %d, b = %d\n", a, b);
-	swap_dif(&a, &b);
-	printf("a = %d, b = %d\n", a, b);
+	test(&a, &b, &swap_tmp);
+	test(&a, &b, &swap_xor);
+	test(&a, &b, &swap_dif);
 	return (0);
 }

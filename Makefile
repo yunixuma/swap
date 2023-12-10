@@ -1,19 +1,20 @@
 # ********************** Section for Macros (Variables) ********************** #
 # Product file
-NAME			= swap
+NAME			= test
 NAME1			= tmp
 NAME2			= xor
 NAME3			= dif
 
 # Enumeration of files
+SRC				= swap_test.c
 ifeq ($(MAKECMDGOALS), tmp)
-	SRC	= swap_tmp.c
+	SRC	= main.c swap_tmp.c
 endif
 ifeq ($(MAKECMDGOALS), xor)
-	SRC	= swap_xor.c
+	SRC	= main.c swap_xor.c
 endif
 ifeq ($(MAKECMDGOALS), dif)
-	SRC	= swap_dif.c
+	SRC	= main.c swap_dif.c
 endif
 
 # Enumeration of directories
@@ -57,17 +58,18 @@ all: $(NAME)
 clean:
 	-$(RM) $(RMFLAGS) $(OBJDIR)
 fclean: clean
-	-$(RM) $(RMFLAGS) $(NAME1) $(NAME2) $(NAME3)
+	-$(RM) $(RMFLAGS) $(NAME) $(NAME1) $(NAME2) $(NAME3)
 re: fclean all
 
 # Additional targets
 debug: fclean all
 
 # Recipes
-$(NAME):
+$(NAME): $(SS) $(OBJS)
 	-$(MAKE) $(NAME1)
 	-$(MAKE) $(NAME2)
 	-$(MAKE) $(NAME3)
+	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME)
 $(NAME1): $(SS) $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME1)
 $(NAME2): $(SS) $(OBJS)
