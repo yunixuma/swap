@@ -56,7 +56,7 @@ all: $(NAME)
 clean:
 	-$(RM) $(RMFLAGS) $(OBJDIR)
 fclean: clean
-	-$(RM) $(RMFLAGS) 
+	-$(RM) $(RMFLAGS) $(NAME1) $(NAME2) $(NAME3)
 re: fclean all
 
 # Additional targets
