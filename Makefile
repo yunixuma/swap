@@ -44,6 +44,7 @@ endif
 
 # Macros to replace and/or integrate
 SRCS			= $(addprefix $(SRCDIR)/, $(SRC))
+SS				= $(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.s)))
 OBJS			= $(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.o)))
 DEPS			= $(addprefix $(OBJDIR)/, $(notdir $(SRCS:.c=.d)))
 
@@ -64,18 +65,20 @@ debug: fclean all
 
 # Recipes
 $(NAME):
-	$(MAKE) $(NAME1)
-	$(MAKE) $(NAME2)
-	$(MAKE) $(NAME3)
-$(NAME1): $(OBJS)
+	-$(MAKE) $(NAME1)
+	-$(MAKE) $(NAME2)
+	-$(MAKE) $(NAME3)
+$(NAME1): $(SS) $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME1)
-$(NAME2): $(OBJS)
+$(NAME2): $(SS) $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME2)
-$(NAME3): $(OBJS)
+$(NAME3): $(SS) $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME3)
 $(OBJDIR):
 	@mkdir -p $@
-$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
+$(OBJDIR)/%.s: $(SRCDIR)/%.c | $(OBJDIR)
+	$(CC) $(CFLAGS) -S $(DEF) -o $@ -c $<
+$(OBJDIR)/%.o: $(OBJDIR)/%.s | $(OBJDIR)
 	$(CC) $(CFLAGS) $(DEF) -o $@ -c $<
 
 # Including and ignore .dep files when they are not found
