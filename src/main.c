@@ -1,4 +1,4 @@
-void	swap(int *a, int *b);
+void	my_swap(int *a, int *b);
 
 int	main(void)
 {
@@ -7,6 +7,6 @@ int	main(void)
 
 	a = 3;
 	b = -4;
-	swap(&a, &b);
+	my_swap(&a, &b);
 	return (0);
 }
