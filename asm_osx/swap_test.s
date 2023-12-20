@@ -26,6 +26,42 @@ _swap_tmp:                              ## @swap_tmp
 	retq
 	.cfi_endproc
                                         ## -- End function
+	.globl	_swap_tmps              ## -- Begin function swap_tmps
+	.p2align	4, 0x90
+_swap_tmps:                             ## @swap_tmps
+	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	movq	%rdi, -8(%rbp)
+	movq	%rsi, -16(%rbp)
+	movq	-8(%rbp), %rsi
+	movl	(%rsi), %eax
+	movl	%eax, -20(%rbp)
+	movl	-20(%rbp), %eax
+	movl	%eax, -24(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, -28(%rbp)
+	movl	-28(%rbp), %eax
+	movl	%eax, -32(%rbp)
+	movl	-32(%rbp), %eax
+	movl	%eax, -36(%rbp)
+	movl	-36(%rbp), %eax
+	movl	%eax, -40(%rbp)
+	movq	-16(%rbp), %rsi
+	movl	(%rsi), %eax
+	movq	-8(%rbp), %rsi
+	movl	%eax, (%rsi)
+	movl	-40(%rbp), %eax
+	movq	-16(%rbp), %rsi
+	movl	%eax, (%rsi)
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
 	.globl	_swap_xor               ## -- Begin function swap_xor
 	.p2align	4, 0x90
 _swap_xor:                              ## @swap_xor
@@ -145,33 +181,33 @@ _my_sqrt:                               ## @my_sqrt
 	movl	$1, %edi
 	shll	%cl, %edi
 	movl	%edi, -12(%rbp)
-LBB4_1:                                 ## =>This Inner Loop Header: Depth=1
+LBB5_1:                                 ## =>This Inner Loop Header: Depth=1
 	cmpl	$0, -20(%rbp)
-	je	LBB4_8
-## %bb.2:                               ##   in Loop: Header=BB4_1 Depth=1
+	je	LBB5_8
+## %bb.2:                               ##   in Loop: Header=BB5_1 Depth=1
 	movl	-12(%rbp), %eax
 	imull	-12(%rbp), %eax
 	movl	%eax, -16(%rbp)
 	movl	-16(%rbp), %eax
 	cmpl	-8(%rbp), %eax
-	jne	LBB4_4
+	jne	LBB5_4
 ## %bb.3:
 	movl	-12(%rbp), %eax
 	movl	%eax, -4(%rbp)
-	jmp	LBB4_9
-LBB4_4:                                 ##   in Loop: Header=BB4_1 Depth=1
+	jmp	LBB5_9
+LBB5_4:                                 ##   in Loop: Header=BB5_1 Depth=1
 	movl	-16(%rbp), %eax
 	cmpl	-8(%rbp), %eax
-	jge	LBB4_6
-## %bb.5:                               ##   in Loop: Header=BB4_1 Depth=1
+	jge	LBB5_6
+## %bb.5:                               ##   in Loop: Header=BB5_1 Depth=1
 	movl	-20(%rbp), %ecx
                                         ## kill: def $cl killed $ecx
 	movl	$1, %eax
 	shll	%cl, %eax
 	addl	-12(%rbp), %eax
 	movl	%eax, -12(%rbp)
-	jmp	LBB4_7
-LBB4_6:                                 ##   in Loop: Header=BB4_1 Depth=1
+	jmp	LBB5_7
+LBB5_6:                                 ##   in Loop: Header=BB5_1 Depth=1
 	movl	-20(%rbp), %ecx
                                         ## kill: def $cl killed $ecx
 	movl	$1, %eax
@@ -179,15 +215,15 @@ LBB4_6:                                 ##   in Loop: Header=BB4_1 Depth=1
 	movl	-12(%rbp), %edx
 	subl	%eax, %edx
 	movl	%edx, -12(%rbp)
-LBB4_7:                                 ##   in Loop: Header=BB4_1 Depth=1
+LBB5_7:                                 ##   in Loop: Header=BB5_1 Depth=1
 	movl	-20(%rbp), %eax
 	addl	$-1, %eax
 	movl	%eax, -20(%rbp)
-	jmp	LBB4_1
-LBB4_8:
+	jmp	LBB5_1
+LBB5_8:
 	movl	-12(%rbp), %eax
 	movl	%eax, -4(%rbp)
-LBB4_9:
+LBB5_9:
 	movl	-4(%rbp), %eax
 	popq	%rbp
 	retq
@@ -210,7 +246,7 @@ _main:                                  ## @main
 	movl	$3, -20(%rbp)
 	movl	$-4, -24(%rbp)
 	cmpl	$3, -8(%rbp)
-	jne	LBB5_2
+	jne	LBB6_2
 ## %bb.1:
 	movq	-16(%rbp), %rax
 	movq	8(%rax), %rdi
@@ -220,10 +256,14 @@ _main:                                  ## @main
 	movq	16(%rdi), %rdi
 	callq	_atoi
 	movl	%eax, -24(%rbp)
-LBB5_2:
+LBB6_2:
 	leaq	-20(%rbp), %rdi
 	leaq	-24(%rbp), %rsi
 	leaq	_swap_tmp(%rip), %rdx
+	callq	_test
+	leaq	-20(%rbp), %rdi
+	leaq	-24(%rbp), %rsi
+	leaq	_swap_tmps(%rip), %rdx
 	callq	_test
 	leaq	-20(%rbp), %rdi
 	leaq	-24(%rbp), %rsi
@@ -253,25 +293,25 @@ _test:                                  ## @test
 	movq	%rsi, -16(%rbp)
 	movq	%rdx, -24(%rbp)
 	movl	$0, -60(%rbp)
-LBB6_1:                                 ## =>This Inner Loop Header: Depth=1
+LBB7_1:                                 ## =>This Inner Loop Header: Depth=1
 	movl	-60(%rbp), %eax
 	movl	$1000000000, %edi       ## imm = 0x3B9ACA00
 	movl	%eax, -68(%rbp)         ## 4-byte Spill
 	callq	_my_sqrt
 	movl	-68(%rbp), %edi         ## 4-byte Reload
 	cmpl	%eax, %edi
-	jge	LBB6_4
-## %bb.2:                               ##   in Loop: Header=BB6_1 Depth=1
+	jge	LBB7_4
+## %bb.2:                               ##   in Loop: Header=BB7_1 Depth=1
 	movq	-24(%rbp), %rax
 	movq	-8(%rbp), %rdi
 	movq	-16(%rbp), %rsi
 	callq	*%rax
-## %bb.3:                               ##   in Loop: Header=BB6_1 Depth=1
+## %bb.3:                               ##   in Loop: Header=BB7_1 Depth=1
 	movl	-60(%rbp), %eax
 	addl	$1, %eax
 	movl	%eax, -60(%rbp)
-	jmp	LBB6_1
-LBB6_4:
+	jmp	LBB7_1
+LBB7_4:
 	xorl	%eax, %eax
 	movl	%eax, %edi
 	callq	_time
@@ -279,20 +319,20 @@ LBB6_4:
 	callq	_clock
 	movq	%rax, -32(%rbp)
 	movl	$0, -64(%rbp)
-LBB6_5:                                 ## =>This Inner Loop Header: Depth=1
+LBB7_5:                                 ## =>This Inner Loop Header: Depth=1
 	cmpl	$1000000000, -64(%rbp)  ## imm = 0x3B9ACA00
-	jge	LBB6_8
-## %bb.6:                               ##   in Loop: Header=BB6_5 Depth=1
+	jge	LBB7_8
+## %bb.6:                               ##   in Loop: Header=BB7_5 Depth=1
 	movq	-24(%rbp), %rax
 	movq	-8(%rbp), %rdi
 	movq	-16(%rbp), %rsi
 	callq	*%rax
-## %bb.7:                               ##   in Loop: Header=BB6_5 Depth=1
+## %bb.7:                               ##   in Loop: Header=BB7_5 Depth=1
 	movl	-64(%rbp), %eax
 	addl	$1, %eax
 	movl	%eax, -64(%rbp)
-	jmp	LBB6_5
-LBB6_8:
+	jmp	LBB7_5
+LBB7_8:
 	callq	_clock
 	xorl	%ecx, %ecx
 	movl	%ecx, %edi

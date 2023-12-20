@@ -2,7 +2,7 @@
 # include <stdlib.h>
 # include <time.h>
 
-#define N_CYCLES	CLOCKS_PER_SEC
+#define N_CYCLES	CLOCKS_PER_SEC * 1000
 #define BITS_INT	32
 
 void	swap_tmp(int *a, int *b)
@@ -12,6 +12,25 @@ void	swap_tmp(int *a, int *b)
 	tmp = *a;
 	*a = *b;
 	*b = tmp;
+}
+
+void	swap_tmps(int *a, int *b)
+{
+	int	tmp0;
+	int	tmp1;
+	int	tmp2;
+	int	tmp3;
+	int	tmp4;
+	int	tmp5;
+
+	tmp0 = *a;
+	tmp1 = tmp0;
+	tmp2 = tmp1;
+	tmp3 = tmp2;
+	tmp4 = tmp3;
+	tmp5 = tmp4;
+	*a = *b;
+	*b = tmp5;
 }
 
 void	swap_xor(int *a, int *b)
@@ -57,18 +76,23 @@ int	my_sqrt(int n)
 	return (ret);
 }
 
-void	test(int *a, int *b, void (*f)(int *, int *))
+static void	test(int *a, int *b, void (*f)(int *, int *))
 {
 	clock_t	clock_begin;
 	clock_t	clock_end;
+	time_t	time_begin;
+	time_t	time_end;
 
 	for (int i = 0; i < my_sqrt(N_CYCLES); i++)
 		f(a, b);
+	time_begin = time(NULL);
 	clock_begin = clock();
 	for (int i = 0; i < N_CYCLES; i++)
 		f(a, b);
 	clock_end = clock();
+	time_end = time(NULL);
 	printf("[%p]\t%ld clocks\n", f, clock_end - clock_begin);
+	printf("[%p]\t%ld seconds\n", f, time_end - time_begin);
 }
 
 int	main(int argc, char *argv[])
@@ -84,6 +108,7 @@ int	main(int argc, char *argv[])
 		b = atoi(argv[2]);
 	}
 	test(&a, &b, &swap_tmp);
+	test(&a, &b, &swap_tmps);
 	test(&a, &b, &swap_xor);
 	test(&a, &b, &swap_dif);
 	return (0);
