@@ -2,19 +2,23 @@
 # Product file
 NAME			= test
 NAME1			= tmp
-NAME2			= xor
-NAME3			= dif
+NAME2			= tmps
+NAME3			= xor
+NAME4			= dif
 
 # Enumeration of files
 SRC				= swap_test.c
 ifeq ($(MAKECMDGOALS), tmp)
-	SRC	= main.c swap_tmp.c
+	SRC	= main.c swap_$(MAKECMDGOALS).c
+endif
+ifeq ($(MAKECMDGOALS), tmps)
+	SRC	= main.c swap_$(MAKECMDGOALS).c
 endif
 ifeq ($(MAKECMDGOALS), xor)
-	SRC	= main.c swap_xor.c
+	SRC	= main.c swap_$(MAKECMDGOALS).c
 endif
 ifeq ($(MAKECMDGOALS), dif)
-	SRC	= main.c swap_dif.c
+	SRC	= main.c swap_$(MAKECMDGOALS).c
 endif
 
 # Enumeration of directories
@@ -58,7 +62,7 @@ all: $(NAME)
 clean:
 	-$(RM) $(RMFLAGS) $(OBJDIR)
 fclean: clean
-	-$(RM) $(RMFLAGS) $(NAME) $(NAME1) $(NAME2) $(NAME3)
+	-$(RM) $(RMFLAGS) $(NAME) $(NAME1) $(NAME2) $(NAME3) $(NAME4)
 re: fclean all
 
 # Additional targets
@@ -69,6 +73,7 @@ $(NAME): $(SS) $(OBJS)
 	-$(MAKE) $(NAME1)
 	-$(MAKE) $(NAME2)
 	-$(MAKE) $(NAME3)
+	-$(MAKE) $(NAME4)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME)
 $(NAME1): $(SS) $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME1)
@@ -76,6 +81,8 @@ $(NAME2): $(SS) $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME2)
 $(NAME3): $(SS) $(OBJS)
 	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME3)
+$(NAME4): $(SS) $(OBJS)
+	$(CC) $(LDFLAGS) $(OBJS) -o $(NAME4)
 $(OBJDIR):
 	@mkdir -p $@
 $(OBJDIR)/%.s: $(SRCDIR)/%.c | $(OBJDIR)
