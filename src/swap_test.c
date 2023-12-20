@@ -87,7 +87,7 @@ static void	test(int *a, int *b, void (*f)(int *, int *))
 		f(a, b);
 	time_begin = time(NULL);
 	clock_begin = clock();
-	for (int i = 0; i < N_CYCLES; i++)
+	for (int i = 0; i < (int)N_CYCLES; i++)
 		f(a, b);
 	clock_end = clock();
 	time_end = time(NULL);
